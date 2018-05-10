@@ -13,9 +13,7 @@ import org.apache.thrift.transport.TTransport;
 public class K8ServiceThriftClient<TCLIENT extends TServiceClient>
         extends AbstractThriftClient<TCLIENT> {
 
-    private String k8ServiceName;
-
-    private int k8ServicePort;
+    private K8ServiceKey k8ServiceKey;
 
     private TTransportPool connPool;
 
@@ -23,11 +21,8 @@ public class K8ServiceThriftClient<TCLIENT extends TServiceClient>
     public void init() {
         super.init();
         // check
-        if (k8ServiceName == null || k8ServiceName.isEmpty()) {
-            throw new RuntimeException("invalid k8ServiceName");
-        }
-        if (k8ServicePort == 0) {
-            throw new RuntimeException("invalid k8ServicePort");
+        if (k8ServiceKey == null) {
+            throw new RuntimeException("invalid k8ServiceName or k8Serviceport");
         }
         // init pool
         connPool = new TTransportPool(new TTransportPoolFactory());
@@ -38,7 +33,7 @@ public class K8ServiceThriftClient<TCLIENT extends TServiceClient>
 
         // Step 1: get TTransport
         TTransport tpt = null;
-        String key = getConnBorrowKey();
+        K8ServiceKey key = getConnBorrowKey();
         try {
             tpt = connPool.borrowObject(key);
         } catch (Exception e) {
@@ -61,7 +56,7 @@ public class K8ServiceThriftClient<TCLIENT extends TServiceClient>
     public void exec(ThriftExecFunc<TCLIENT> texec) {
         // Step 1: get TTransport
         TTransport tpt = null;
-        String key = getConnBorrowKey();
+        K8ServiceKey key = getConnBorrowKey();
         try {
 
             // borrow transport
@@ -81,40 +76,24 @@ public class K8ServiceThriftClient<TCLIENT extends TServiceClient>
         }
     }
 
-    private String getConnBorrowKey() {
-
-        // Get ip and port
-        String ip = k8ServiceName;
-        int port = k8ServicePort;
-        String key = getConnPoolKey(ip, port);
-        return key;
+    private K8ServiceKey getConnBorrowKey() {
+        return k8ServiceKey;
     }
 
-    private void returnTransport(String key, TTransport transport) {
+    private void returnTransport(K8ServiceKey key, TTransport transport) {
         connPool.returnObject(key, transport);
     }
 
-    private void returnBrokenTransport(String key, TTransport transport) {
+    private void returnBrokenTransport(K8ServiceKey key, TTransport transport) {
         connPool.returnBrokenObject(key, transport);
     }
 
-    private String getConnPoolKey(String host, int port) {
-        return host + ":" + port;
+    public K8ServiceKey getK8ServiceKey() {
+        return k8ServiceKey;
     }
 
-    public String getK8ServiceName() {
-        return k8ServiceName;
+    public void setK8ServiceKey(K8ServiceKey k8ServiceKey) {
+        this.k8ServiceKey = k8ServiceKey;
     }
 
-    public void setK8ServiceName(String k8ServiceName) {
-        this.k8ServiceName = k8ServiceName;
-    }
-
-    public int getK8ServicePort() {
-        return k8ServicePort;
-    }
-
-    public void setK8ServicePort(int k8ServicePort) {
-        this.k8ServicePort = k8ServicePort;
-    }
 }

@@ -1,5 +1,6 @@
 package com.coder4.lmsia.thrift.client.builder;
 
+import com.coder4.lmsia.thrift.client.K8ServiceKey;
 import com.coder4.lmsia.thrift.client.K8ServiceThriftClient;
 import org.apache.thrift.TServiceClient;
 
@@ -15,13 +16,8 @@ public class K8ServiceThriftClientBuilder<TCLIENT extends TServiceClient> {
         return client;
     }
 
-    protected K8ServiceThriftClientBuilder<TCLIENT> setK8ServiceName(String serviceName) {
-        client.setK8ServiceName(serviceName);
-        return this;
-    }
-
-    protected K8ServiceThriftClientBuilder<TCLIENT> setK8ServicePort(int servicePort) {
-        client.setK8ServicePort(servicePort);
+    protected K8ServiceThriftClientBuilder<TCLIENT> setK8ServiceKey(K8ServiceKey key) {
+        client.setK8ServiceKey(key);
         return this;
     }
 

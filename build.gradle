@@ -10,7 +10,7 @@ targetCompatibility = 1.8
 // Use as maven groupId/artifactId/version
 group = 'com.coder4.lmsia'
 project.archivesBaseName = 'thrift-client'
-project.version = '0.0.1'
+project.version = '0.0.2'
 
 // source & javadoc pom
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -29,7 +29,6 @@ repositories {
 dependencies {
     compile 'org.apache.commons:commons-pool2:2.4.2'
     compileOnly 'org.apache.thrift:libthrift:0.9.3'
-    compileOnly 'ch.qos.logback:logback-classic:1.2.3'
 
 
     testCompile 'junit:junit:4.12'

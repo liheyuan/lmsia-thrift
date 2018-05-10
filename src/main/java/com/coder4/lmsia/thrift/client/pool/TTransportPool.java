@@ -1,5 +1,6 @@
 package com.coder4.lmsia.thrift.client.pool;
 
+import com.coder4.lmsia.thrift.client.K8ServiceKey;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author coder4
  */
-public class TTransportPool extends GenericKeyedObjectPool<String, TTransport> {
+public class TTransportPool extends GenericKeyedObjectPool<K8ServiceKey, TTransport> {
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -38,11 +39,11 @@ public class TTransportPool extends GenericKeyedObjectPool<String, TTransport> {
         return (TTransportPoolFactory) super.getFactory();
     }
 
-    public void returnBrokenObject(String url, TTransport transport) {
+    public void returnBrokenObject(K8ServiceKey key, TTransport transport) {
         try {
-            invalidateObject(url, transport);
+            invalidateObject(key, transport);
         } catch (Exception e) {
-            LOG.warn("return broken url " + url);
+            LOG.warn("return broken key " + key);
             e.printStackTrace();
         }
     }

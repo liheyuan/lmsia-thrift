@@ -1,6 +1,6 @@
 package com.coder4.lmsia.thrift.client.pool;
 
-import com.coder4.lmsia.thrift.client.utils.ThriftUrlStr;
+import com.coder4.lmsia.thrift.client.K8ServiceKey;
 import org.apache.commons.pool2.BaseKeyedPooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
@@ -8,23 +8,21 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
-import java.util.Optional;
-
 /**
  * @author coder4
  */
-public class TTransportPoolFactory extends BaseKeyedPooledObjectFactory<String, TTransport> {
+public class TTransportPoolFactory extends BaseKeyedPooledObjectFactory<K8ServiceKey, TTransport> {
 
     protected static final int THRIFT_CLIENT_DEFAULT_TIMEOUT = 5000;
 
     protected static final int THRIFT_CLIENT_DEFAULT_MAX_FRAME_SIZE = 1024 * 1024 * 16;
 
     @Override
-    public TTransport create(String key) throws Exception {
-        Optional<ThriftUrlStr> urlOp = ThriftUrlStr.parse(key);
-        if (urlOp.isPresent()) {
-            ThriftUrlStr url = urlOp.get();
-            TSocket socket = new TSocket(url.getHost(), url.getPort(), THRIFT_CLIENT_DEFAULT_TIMEOUT);
+    public TTransport create(K8ServiceKey key) throws Exception {
+        if (key != null) {
+            String host = key.getK8ServiceHost();
+            int port = key.getK8ServicePort();
+            TSocket socket = new TSocket(host, port, THRIFT_CLIENT_DEFAULT_TIMEOUT);
 
             TTransport transport = new TFramedTransport(
                     socket, THRIFT_CLIENT_DEFAULT_MAX_FRAME_SIZE);
@@ -43,12 +41,12 @@ public class TTransportPoolFactory extends BaseKeyedPooledObjectFactory<String, 
     }
 
     @Override
-    public void destroyObject(String key, PooledObject<TTransport> obj) throws Exception {
+    public void destroyObject(K8ServiceKey key, PooledObject<TTransport> obj) throws Exception {
         obj.getObject().close();
     }
 
     @Override
-    public boolean validateObject(String key, PooledObject<TTransport> obj) {
+    public boolean validateObject(K8ServiceKey key, PooledObject<TTransport> obj) {
         return obj.getObject().isOpen();
     }
 
