@@ -1,9 +1,3 @@
-/**
- * @(#)AbstractThriftClient.java, Aug 01, 2017.
- * <p>
- * Copyright 2017 fenbi.com. All rights reserved.
- * FENBI.COM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.coder4.lmsia.thrift.client;
 
 import com.coder4.lmsia.thrift.client.func.ThriftCallFunc;

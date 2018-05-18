@@ -1,9 +1,3 @@
-/**
- * @(#)ThriftUrlStr.java, Aug 11, 2017.
- * <p>
- * Copyright 2017 fenbi.com. All rights reserved.
- * FENBI.COM PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
 package com.coder4.lmsia.thrift.client.utils;
 
 import java.util.Optional;
@@ -22,7 +16,7 @@ public class ThriftUrlStr {
     }
 
     public static Optional<ThriftUrlStr> parse(String url) {
-        String tmp [] = url.split(":");
+        String tmp[] = url.split(":");
         if (tmp.length != 2) {
             return Optional.empty();
         } else {
