@@ -2,6 +2,7 @@ package com.coder4.lmsia.thrift.client;
 
 import com.coder4.lmsia.thrift.client.func.ThriftCallFunc;
 import com.coder4.lmsia.thrift.client.func.ThriftExecFunc;
+import com.coder4.sbmvt.thrift.common.TraceBinaryProtocol.Factory;
 import org.apache.thrift.TServiceClient;
 import org.apache.thrift.TServiceClientFactory;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -19,13 +20,9 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class AbstractThriftClient<TCLIENT extends TServiceClient> implements ThriftClient<TCLIENT> {
 
-    protected static final int THRIFT_CLIENT_DEFAULT_TIMEOUT = 5000;
-
-    protected static final int THRIFT_CLIENT_DEFAULT_MAX_FRAME_SIZE = 1024 * 1024 * 16;
-
     private Class<?> thriftClass;
 
-    private static final TBinaryProtocol.Factory protocolFactory = new TBinaryProtocol.Factory();
+    private static final Factory protocolFactory = new Factory();
 
     private TServiceClientFactory<TCLIENT> clientFactory;
 
@@ -44,7 +41,7 @@ public abstract class AbstractThriftClient<TCLIENT extends TServiceClient> imple
         }
 
         threadPool = new ThreadPoolExecutor(
-                10, 100, 0,
+                10, 100, 10,
                 TimeUnit.MICROSECONDS, new LinkedBlockingDeque<>());
     }
 

@@ -7,12 +7,13 @@ import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 
+import static com.coder4.sbmvt.thrift.common.Constants.THRIFT_MAX_FRAME_SIZE;
+import static com.coder4.sbmvt.thrift.common.Constants.THRIFT_TIMEOUT;
+
 /**
  * @author coder4
  */
 public class EasyThriftClient<TCLIENT extends TServiceClient> extends AbstractThriftClient<TCLIENT> {
-
-    private static final int EASY_THRIFT_BUFFER_SIZE = 1024 * 16;
 
     protected String thriftServerHost;
 
@@ -30,10 +31,10 @@ public class EasyThriftClient<TCLIENT extends TServiceClient> extends AbstractTh
     }
 
     private TTransport borrowTransport() throws Exception {
-        TSocket socket = new TSocket(thriftServerHost, thriftServerPort, THRIFT_CLIENT_DEFAULT_TIMEOUT);
+        TSocket socket = new TSocket(thriftServerHost, thriftServerPort, THRIFT_TIMEOUT);
 
         TTransport transport = new TFramedTransport(
-                socket, THRIFT_CLIENT_DEFAULT_MAX_FRAME_SIZE);
+                socket, THRIFT_MAX_FRAME_SIZE);
 
         transport.open();
 
